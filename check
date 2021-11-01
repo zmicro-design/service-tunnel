@@ -1,0 +1,38 @@
+#!/bin/bash
+
+load inquirer
+
+check() {
+  if [ ! -f $SERVICE_TUNNEL_CONFIG ]; then
+     touch $SERVICE_TUNNEL_CONFIG
+  fi
+
+  config::load_file $SERVICE_TUNNEL_CONFIG
+  if [ -z "$CLIENT_ID" ] || [ -z "$CLIENT_SECRET" ]; then
+    inquirer::text "请输入 CLIENT_ID:" client_id
+    echo "CLIENT_ID=$client_id" > $SERVICE_TUNNEL_CONFIG
+
+    inquirer::text "请输入 CLIENT_SECRET:" client_secret
+    echo "CLIENT_SECRET=$client_secret" >> $SERVICE_TUNNEL_CONFIG
+
+    inquirer::text "请输入 LOCAL_HOST:" local_host
+    echo "LOCAL_HOST=$local_host" >> $SERVICE_TUNNEL_CONFIG
+    
+    inquirer::text "请输入 LOCAL_PORT:" local_port
+    echo "LOCAL_PORT=$local_port" >> $SERVICE_TUNNEL_CONFIG
+
+    inquirer::text "请输入 REMOTE_PORT:" remote_port
+    echo "REMOTE_PORT=$remote_port" >> $SERVICE_TUNNEL_CONFIG
+  fi
+
+  export CLIENT_ID=$CLIENT_ID
+  export CLIENT_SECRET=$CLIENT_SECRET
+  export LOCAL_HOST=$LOCAL_HOST
+  export LOCAL_PORT=$LOCAL_PORT
+  export REMOTE_PORT=$REMOTE_PORT
+
+  # @TODO call manually
+  service::run_check_ok
+}
+
+check $@

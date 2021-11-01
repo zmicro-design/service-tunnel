@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  tunnel:
+    image: whatwewant/inlets:${SERVICE_TUNNEL_VERSION}
+    command: inlets client --credentials ${CLIENT_ID}:${CLIENT_SECRET} tcp ${LOCAL_HOST}:${LOCAL_PORT} -p ${REMOTE_PORT}
+  
+networks:
+  default:
+    external: true
+    name: compose-ingress
